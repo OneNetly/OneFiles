@@ -1,0 +1,94 @@
+# Enable rewrite engine
+RewriteEngine On
+RewriteBase /
+
+# Donation page rule - place this before other rules
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^donate/(.+)$ donate.php?handle=$1 [QSA,L]
+
+# Prevent directory listing
+Options -Indexes
+
+# Remove .php extension
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Handle Authorization header for API
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+# API Routes
+RewriteRule ^api/auth/authorize/?$ api/auth/authorize.php [L,QSA]
+RewriteRule ^api/auth/token/?$ api/auth/token.php [L,QSA] 
+RewriteRule ^api/auth/consent/?$ api/auth/consent.php [L,QSA]
+RewriteRule ^api/user$ api/user.php [L,QSA]
+
+#Donate
+RewriteRule ^donate/([^/]+)/?$ donate.php?handle=$1 [L,QSA]
+
+# Person
+RewriteRule ^person/([0-9]+)/?$ /movies-tv/person.php?id=$1 [L,QSA]
+
+# Movie URLs
+RewriteRule ^movie/([^/]*)/([0-9]+)/?$ /movies-tv/movie.php?id=$2 [L,QSA]
+
+# TV Show URLs
+RewriteRule ^tv/([^/]*)/([0-9]+)/?$ /movies-tv/tv.php?id=$2 [L,QSA]
+
+# Marketplace Routes
+RewriteRule ^marketplace/?$ marketplace.php [L,QSA]
+RewriteRule ^marketplace/([^/]+)/?$ marketplace.php?category=$1 [L,QSA]
+RewriteRule ^file/([^/]+)/([0-9]+)/?$ file-details.php?id=$2 [L,QSA]
+
+# File Management 
+RewriteRule ^sell/?$ sell-file.php [L,QSA]
+RewriteRule ^files/?$ list-files.php [L,QSA]
+RewriteRule ^edit-file/([0-9]+)/?$ edit-file.php?id=$1 [L,QSA] 
+RewriteRule ^download/([0-9]+)/?$ download.php?id=$1 [L,QSA]
+RewriteRule ^download-purchase/([0-9]+)/?$ download-purchase.php?id=$1 [L,QSA]
+
+# Admin Marketplace Management
+RewriteRule ^admin/marketplace/?$ admin/marketplace/index.php [L,QSA]
+RewriteRule ^admin/marketplace/categories/?$ admin/marketplace/categories.php [L,QSA]
+RewriteRule ^admin/marketplace/edit-category/([0-9]+)/?$ admin/marketplace/edit-category.php?id=$1 [L,QSA]
+RewriteRule ^admin/marketplace/files/?$ admin/marketplace/files.php [L,QSA]
+RewriteRule ^admin/marketplace/reports/?$ admin/marketplace/reports.php [L,QSA]
+
+# OAuth2 & SSO Callbacks
+RewriteRule ^oauth2-callback$ oauth2-callback.php [L,QSA]
+RewriteRule ^sso-callback$ sso-callback.php [L,QSA]
+
+# Biolink Routes
+RewriteRule ^u/([^/]+)/?$ biolink/view.php?username=$1 [L,QSA]
+RewriteRule ^biolink/click/([0-9]+)/?$ biolink/click.php?id=$1 [L,QSA]
+
+# Biolink Routes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?$ biolink/view.php?username=$1 [L,QSA]
+
+# Protect sensitive biolink files
+<Files "biolink/create.php">
+    Require all granted
+</Files>
+<Files "biolink/edit.php">
+    Require all granted
+</Files>
+<Files "biolink/delete.php">
+    Require all granted
+</Files>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # CORS Headers for API
+    <FilesMatch "^api/">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    </FilesMatch>
+</IfModule>
