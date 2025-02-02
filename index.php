@@ -20,15 +20,6 @@
             We're currently performing some scheduled maintenance. We'll be back online shortly!
         </p>
         
-        <div class="flex items-center justify-center space-x-4">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            <span class="text-gray-500">Expected downtime: 30 minutes</span>
-        </div>
-        
-        <div class="mt-8 text-sm text-gray-500">
-            If you need immediate assistance, please contact: 
-            <a href="mailto:support@example.com" class="text-blue-500 hover:text-blue-600">support@example.com</a>
-        </div>
     </div>
 </body>
 </html>
