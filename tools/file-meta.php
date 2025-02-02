@@ -90,7 +90,7 @@ function formatBytes($bytes) {
     <script src="../js/vue.global.js"></script>
 </head>
 <body class="bg-gray-50">
-    <?php require_once 'nav.php'; ?>
+    <?php require_once '../nav.php'; ?>
 
     <div class="max-w-4xl mx-auto px-4 py-8">
         <div class="bg-white rounded-lg shadow p-6">

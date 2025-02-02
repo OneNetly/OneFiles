@@ -184,7 +184,6 @@ $tools = [
 <html>
 <head>
     <title><?php echo $pageTitle; ?></title>
-    <link href="../css/output.css" rel="stylesheet">
     <script src="../js/cdn.min.js"></script>
     <script src="../js/vue.global.js"></script>
 </head>
