@@ -1,292 +1,307 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- This adapter normalizes cross-browser differences in WebRTC APIs. Currently necessary in order to support Firefox. -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/8.1.2/adapter.min.js"
-      integrity="sha512-l40eBFtXx+ve5RryIELC3y6/OM6Nu89mLGQd7fg1C93tN6XrkC3supb+/YiD/Y+B8P37kdJjtG1MT1kOO2VzxA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-  </head>
-
-  <body>
-    <div class="grid">
-      <h1>Calls Echo Demo</h1>
-      <div>
-        <h2>Local stream</h2>
-        <video id="local-video" autoplay muted></video>
-      </div>
-      <div>
-        <h2>Remote echo stream</h2>
-        <video id="remote-video" autoplay></video>
-      </div>
-    </div>
-
-    <script type="module">
-      // This is a class the defines the Calls API interactions.
-      // It's not an SDK but a example of how Calls API can be used.
-
-      // This is the App Id provided by the dashboard that identifies this Calls Application.
-      const appId = '222facc0220bce9826dd86d636d79020';
-      // DO NOT USE YOUR SECRET IN THE BROWSER FOR PRODUCTION. It should be kept and used server-side.
-      const appSecret = '1c548abb368970fae553e34d75a68c832847f85d723b80330323fc06b6fa0b2b';
-
-      class CallsApp {
-        constructor(appId, basePath = 'https://rtc.live.cloudflare.com/v1') {
-          this.prefixPath = `${basePath}/apps/${appId}`;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Blocker Detector Generator - Free Tool by FreeNetly</title>
+    <meta name="description" content="Generate customizable ad blocker detection code for your website. Free tool to create professional ad blocker detection with blur effects and custom messages.">
+    <meta name="keywords" content="ad blocker detector, adblock detection, website tools, anti-adblock, javascript tools">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Ad Blocker Detector Generator - FreeNetly">
+    <meta property="og:description" content="Create customized ad blocker detection code for your website with our free tool.">
+    <meta property="og:url" content="https://freenetly.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Schema.org markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Ad Blocker Detector Generator",
+        "applicationCategory": "WebDevelopment",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "provider": {
+            "@type": "Organization",
+            "name": "FreeNetly",
+            "url": "https://freenetly.com"
         }
-
-        async sendRequest(url, body, method = 'POST') {
-          const request = {
-            method: method,
-            mode: 'cors',
-            headers: {
-              'content-type': 'application/json',
-              Authorization: `Bearer ${appSecret}`
-            },
-            body: JSON.stringify(body)
-          };
-          const response = await fetch(url, request);
-          const result = await response.json();
-          return result;
-        }
-
-        checkErrors(result, tracksCount = 0) {
-          if (result.errorCode) {
-            throw new Error(result.errorDescription);
-          }
-          for (let i = 0; i < tracksCount; i++) {
-            if (result.tracks[i].errorCode) {
-              throw new Error(
-                `tracks[${i}]: ${result.tracks[i].errorDescription}`
-              );
-            }
-          }
-        }
-
-        // newSession sends the initial offer and creates a session
-        async newSession(offerSDP) {
-          const url = `${this.prefixPath}/sessions/new`;
-          const body = {
-            sessionDescription: {
-              type: 'offer',
-              sdp: offerSDP
-            }
-          };
-          const result = await this.sendRequest(url, body);
-          this.checkErrors(result);
-          this.sessionId = result.sessionId;
-          return result;
-        }
-
-        // newTracks shares local tracks or gets tracks
-        async newTracks(trackObjects, offerSDP = null) {
-          const url = `${this.prefixPath}/sessions/${this.sessionId}/tracks/new`;
-          const body = {
-            sessionDescription: {
-              type: 'offer',
-              sdp: offerSDP
-            },
-            tracks: trackObjects
-          };
-          if (!offerSDP) {
-            delete body['sessionDescription'];
-          }
-          const result = await this.sendRequest(url, body);
-          this.checkErrors(result, trackObjects.length);
-          return result;
-        }
-
-        // sendAnswerSDP sends an answer SDP if a renegotiation is required
-        async sendAnswerSDP(answer) {
-          const url = `${this.prefixPath}/sessions/${this.sessionId}/renegotiate`;
-          const body = {
-            sessionDescription: {
-              type: 'answer',
-              sdp: answer
-            }
-          };
-          const result = await this.sendRequest(url, body, 'PUT');
-          this.checkErrors(result);
-        }
-      }
-
-      // Use Cloudflare's STUN server
-      self.pc = new RTCPeerConnection({
-        iceServers: [
-          {
-            urls: 'stun:stun.cloudflare.com:3478'
-          }
-        ],
-        bundlePolicy: 'max-bundle'
-      });
-
-      // In order to successfully establish a peer connection, we need at least one track to publish.
-      // In this case, we create two: video & audio
-      const localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      });
-
-      // Get the local video element in the HTML and set the source to show local stream
-      const localVideoElement = document.getElementById('local-video');
-      localVideoElement.srcObject = localStream;
-
-      // Add sendonly trancievers to the PeerConnection
-      self.transceivers = localStream.getTracks().map(track =>
-        self.pc.addTransceiver(track, {
-          direction: 'sendonly'
-        })
-      );
-
-      // Create a instance of CallsApp (defined below). Please note that this is not an official SDK but just a demo showing the HTML API.
-      self.app = new CallsApp(appId);
-
-      // Send the first offer and create a session. The returned sessionId is required to retrieve any track published by this peer
-      await self.pc.setLocalDescription(await self.pc.createOffer());
-      const newSessionResult = await self.app.newSession(
-        self.pc.localDescription.sdp
-      );
-      await self.pc.setRemoteDescription(
-        new RTCSessionDescription(newSessionResult.sessionDescription)
-      );
-
-      // Make the peer connection was established
-      await new Promise((resolve, reject) => {
-        self.pc.addEventListener('iceconnectionstatechange', ev => {
-          if (ev.target.iceConnectionState === 'connected') {
-            resolve();
-          }
-          setTimeout(reject, 5000, 'connect timeout');
-        });
-      });
-
-      // We associate a trackName to a transceiver identified by a mid (media ID). This way the track
-      // is remotely reachable by the tuple (sessionId, trackName)
-      let trackObjects = self.transceivers.map(transceiver => {
-        return {
-          location: 'local',
-          mid: transceiver.mid,
-          trackName: transceiver.sender.track.id
-        };
-      });
-
-      // Get local description, create a new track, set remote description with the response
-      await self.pc.setLocalDescription(await self.pc.createOffer());
-      const newLocalTracksResult = await self.app.newTracks(
-        trackObjects,
-        self.pc.localDescription.sdp
-      );
-      await self.pc.setRemoteDescription(
-        new RTCSessionDescription(newLocalTracksResult.sessionDescription)
-      );
-
-      // At this point in code, we are successfully sending local stream to Cloudflare Calls.
-      // Now, we will pull the same stream from Cloudflare Calls.
-
-      // Update trackObjects to reference the tracks as "remote"
-      trackObjects = trackObjects.map(trackObject => {
-        return {
-          location: 'remote',
-          sessionId: self.app.sessionId,
-          trackName: trackObject.trackName
-        };
-      });
-
-      // Prepare to receive the tracks before asking for them
-      const remoteTracksPromise = new Promise(resolve => {
-        let tracks = [];
-        self.pc.ontrack = event => {
-          tracks.push(event.track);
-          console.debug(`Got track mid=${event.track.mid}`);
-          if (tracks.length >= 2) {
-            // remote video & audio are ready
-            resolve(tracks);
-          }
-        };
-      });
-
-      // Calls API request to ask for the tracks
-      const newRemoteTracksResult = await self.app.newTracks(trackObjects);
-      if (newRemoteTracksResult.requiresImmediateRenegotiation) {
-        switch (newRemoteTracksResult.sessionDescription.type) {
-          case 'offer':
-            // We let Cloudflare know we're ready to receive the tracks
-            await self.pc.setRemoteDescription(
-              new RTCSessionDescription(
-                newRemoteTracksResult.sessionDescription
-              )
-            );
-            await self.pc.setLocalDescription(await self.pc.createAnswer());
-            await self.app.sendAnswerSDP(self.pc.localDescription.sdp);
-            break;
-          case 'answer':
-            throw new Error('An offer SDP was expected');
-        }
-      }
-
-      // Once started receiving the tracks (video & audio) send the data to the video tag
-      const remoteTracks = await remoteTracksPromise;
-      const remoteVideoElement = document.getElementById('remote-video');
-      const remoteStream = new MediaStream();
-      remoteStream.addTrack(remoteTracks[0]);
-      remoteStream.addTrack(remoteTracks[1]);
-      remoteVideoElement.srcObject = remoteStream;
+    }
     </script>
-    <style>
-      /* Styles are safe to ignore, just here for demo */
 
-      html {
-        color-scheme: light dark;
-        font-family:
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          'Segoe UI',
-          Roboto,
-          Oxygen,
-          Ubuntu,
-          Cantarell,
-          'Open Sans',
-          'Helvetica Neue',
-          sans-serif;
-        background: white;
-        color: black;
-      }
-      body,
-      h1,
-      h2 {
-        margin: 0;
-      }
-      h1,
-      h2 {
-        font-weight: 400;
-      }
-      h1 {
-        font-size: 1.5rem;
-        grid-column: 1 / -1;
-      }
-      h2 {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-      }
-      video {
-        width: 100%;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 1rem;
-      }
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9354746037074515" crossorigin="anonymous"></script>
+</head>
+<body class="min-h-screen bg-gray-100 flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="/" class="text-2xl font-bold text-blue-600">FreeNetly</a>
+                </div>
+                <nav class="flex space-x-8">
+                    <a href="/" class="text-gray-700 hover:text-blue-600 transition">Home</a>
+                    <a href="/privacy.html" class="text-gray-700 hover:text-blue-600 transition">Privacy</a>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-      @media (max-width: 500px) {
-        .grid {
-          grid-template-columns: minmax(0, 1fr);
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <div id="app" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <!-- Introduction Section -->
+            <div class="bg-white p-6 rounded-lg shadow mb-8">
+                <h1 class="text-3xl font-bold mb-4">Ad Blocker Detector Generator</h1>
+                <div class="prose max-w-none">
+                    <p class="text-gray-600 mb-4">
+                        Create a professional ad blocker detection system for your website in seconds. Our free tool helps you generate 
+                        customized code that detects ad blockers and displays elegant warning messages to your users.
+                    </p>
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                        <h2 class="text-lg font-semibold text-blue-700 mb-2">Key Features:</h2>
+                        <ul class="list-disc pl-5 text-gray-600 space-y-1">
+                            <li>Customizable warning messages</li>
+                            <li>Adjustable background opacity</li>
+                            <li>Optional blur effect for content</li>
+                            <li>Easy to implement JavaScript code</li>
+                            <li>Works with all major ad blockers</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generator Tool -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold mb-6">Customize Your Detector</h2>
+                
+                <!-- Options -->
+                <div class="mb-6 space-y-4">
+                    <!-- Message -->
+                    <div>
+                        <label class="block mb-2 font-bold">Warning Message</label>
+                        <input 
+                            type="text" 
+                            v-model="options.warningMessage"
+                            class="w-full p-3 border border-gray-300 rounded"
+                            placeholder="Please disable your ad blocker to continue"
+                        >
+                    </div>
+
+                    <!-- Title -->
+                    <div>
+                        <label class="block mb-2 font-bold">Warning Title</label>
+                        <input 
+                            type="text" 
+                            v-model="options.warningTitle"
+                            class="w-full p-3 border border-gray-300 rounded"
+                            placeholder="🛡️ Ad Blocker Detected"
+                        >
+                    </div>
+
+                    <!-- Enhanced Appearance Settings -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Opacity Control -->
+                        <div>
+                            <label class="block mb-2 font-bold">Background Opacity</label>
+                            <div class="space-y-2">
+                                <input 
+                                    type="range" 
+                                    v-model.number="options.opacity" 
+                                    min="0" 
+                                    max="1" 
+                                    step="0.05"
+                                    class="w-full"
+                                >
+                                <div class="text-sm text-gray-600">
+                                    {{ Math.round(options.opacity * 100) }}% opacity
+                                </div>
+                            </div>
+                            <!-- Live Preview -->
+                            <div 
+                                class="mt-2 h-16 rounded border"
+                                :style="{
+                                    backgroundColor: `rgba(255, 255, 255, ${options.opacity})`
+                                }"
+                            ></div>
+                        </div>
+
+                        <!-- Blur Control -->
+                        <div>
+                            <label class="block mb-2 font-bold">Blur Effect</label>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <label class="flex items-center">
+                                        <input 
+                                            type="checkbox" 
+                                            v-model="options.blur"
+                                            class="h-4 w-4 text-blue-600"
+                                        >
+                                        <span class="ml-2">Enable blur effect</span>
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        v-model.number="options.blurAmount" 
+                                        :disabled="!options.blur"
+                                        min="1"
+                                        max="20"
+                                        class="w-20 p-1 border rounded"
+                                    >
+                                </div>
+                                <!-- Live Preview with dynamic content -->
+                                <div class="relative h-24 overflow-hidden rounded border">
+                                    <!-- Background content -->
+                                    <div class="absolute inset-0 p-3 text-sm bg-gray-50">
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <div v-for="i in 6" :key="i" 
+                                                class="h-6 bg-gray-200 rounded animate-pulse"
+                                            ></div>
+                                        </div>
+                                    </div>
+                                    <!-- Blur overlay -->
+                                    <div 
+                                        class="absolute inset-0"
+                                        :style="{
+                                            backgroundColor: `rgba(255, 255, 255, ${options.opacity})`,
+                                            backdropFilter: options.blur ? `blur(${options.blurAmount}px)` : 'none'
+                                        }"
+                                    ></div>
+                                    <!-- Preview text -->
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-sm font-medium">
+                                            Preview with {{ options.blur ? `${options.blurAmount}px blur` : 'no blur' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generated Code -->
+                <div class="mb-6">
+                    <label class="block mb-2 font-bold">Generated Code</label>
+                    <pre class="bg-gray-50 p-4 rounded border overflow-x-auto"><code>{{ generatedCode }}</code></pre>
+                </div>
+
+                <!-- Copy Button -->
+                <button
+                    @click="copyCode"
+                    :disabled="isCopying"
+                    :class="[
+                        'font-bold py-3 px-6 rounded text-lg transition duration-300',
+                        !isCopying ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 cursor-not-allowed text-gray-500'
+                    ]"
+                >
+                    {{ copyButtonText }}
+                </button>
+            </div>
+
+            <!-- Usage Instructions -->
+            <div class="bg-white p-6 rounded-lg shadow mt-8">
+                <h2 class="text-2xl font-bold mb-4">How to Use</h2>
+                <div class="prose max-w-none text-gray-600">
+                    <ol class="list-decimal pl-5 space-y-3">
+                        <li>Customize the warning message and appearance settings above</li>
+                        <li>Click the "Copy to Clipboard" button to copy the generated code</li>
+                        <li>Paste the code into your website's HTML, just before the closing &lt;/body&gt; tag</li>
+                        <li>Test your website with an ad blocker enabled to verify the implementation</li>
+                    </ol>
+                    <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400">
+                        <p class="text-yellow-700">
+                            <strong>Note:</strong> Make sure to test the detector thoroughly on your website before deploying to production.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white shadow-sm mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center">
+                <p class="text-gray-600">&copy; <?php echo date('Y'); ?> FreeNetly. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    const { createApp } = Vue
+
+    createApp({
+        data() {
+            return {
+                options: {
+                    warningMessage: 'Please disable your ad blocker to continue',
+                    warningTitle: '🛡️ Ad Blocker Detected',
+                    opacity: 0.95,
+                    blur: true,
+                    blurAmount: 5
+                },
+                copyButtonText: 'Copy to Clipboard',
+                isCopying: false
+            }
+        },
+        computed: {
+            generatedCode() {
+                const code = `<script src="https://freenetly.com/js/adblock-detector.js"><\/script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const detector = new AdBlockDetector({
+            warningMessage: '${this.options.warningMessage}',
+            warningTitle: '${this.options.warningTitle}',
+            opacity: ${this.options.opacity},
+            blur: ${this.options.blur},
+            blurAmount: ${this.options.blurAmount},
+        });
+        detector.init();
+    });
+<\/script>`;
+                return code.trim();
+            }
+        },
+        methods: {
+            copyCode() {
+                if (this.isCopying) return;
+                
+                this.isCopying = true;
+                
+                // Create temporary textarea
+                const textarea = document.createElement('textarea');
+                textarea.value = this.generatedCode;
+                textarea.setAttribute('readonly', '');
+                textarea.style.position = 'absolute';
+                textarea.style.left = '-9999px';
+                document.body.appendChild(textarea);
+                
+                try {
+                    // Select and copy
+                    textarea.select();
+                    document.execCommand('copy');
+                    this.copyButtonText = 'Copied!';
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                    this.copyButtonText = 'Failed to copy';
+                } finally {
+                    // Cleanup
+                    document.body.removeChild(textarea);
+                    setTimeout(() => {
+                        this.copyButtonText = 'Copy to Clipboard';
+                        this.isCopying = false;
+                    }, 2000);
+                }
+            }
         }
-      }
-    </style>
-  </body>
+    }).mount('#app')
+    </script>
+
+</body>
 </html>
