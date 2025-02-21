@@ -2,8 +2,6 @@
 
 FreeNetly is a modern, secure, and user-friendly file sharing platform built with PHP. It allows users to upload and share files easily with support for files up to 100MB.
 
-![FreeNetly Screenshot](screenshots/dashboard.png)
-
 ## 🌟 Features
 
 - 📤 File uploads up to 100MB
@@ -37,7 +35,6 @@ cd FreeNetly
 2. Configure your web server:
    - For Apache, ensure mod_rewrite is enabled
    - Point your web root to the project directory
-   - Copy `.htaccess.example` to `.htaccess`
 
 3. Install via the web interface:
    - Navigate to `http://your-domain.com/install.php`
@@ -91,29 +88,6 @@ Social sharing buttons are pre-configured for:
 
 ## 💻 Development
 
-### Project Structure
-
-```
-FreeNetly/
-├── assets/
-│   ├── images/
-│   └── js/
-├── includes/
-│   ├── header.php
-│   └── footer.php
-├── js/
-│   └── adblock-detector.js
-├── .github/
-│   └── workflows/
-├── .htaccess
-├── config.php
-├── download.php
-├── index.php
-├── install.php
-├── privacy.php
-├── upload.php
-└── README.md
-```
 
 ### Contributing
 
@@ -169,4 +143,4 @@ Give a ⭐️ if this project helped you!
 
 ---
 
-Made with ❤️ by [Your Name](https://github.com/yourusername)
+Made with ❤️
