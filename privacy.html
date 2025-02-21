@@ -20,6 +20,20 @@
     gtag('js', new Date());
     gtag('config', 'G-4QY5QNVLVJ');
     </script>
+        <!-- Ad Blocker Detector Script -->
+    <script src="https://freenetly.com/js/adblock-detector.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const detector = new AdBlockDetector({
+                warningMessage: 'Please disable your ad blocker to continue',
+                warningTitle: '🛡️ Ad Blocker Detected',
+                opacity: 0.95,
+                blur: true,
+                blurAmount: 5,
+            });
+            detector.init();
+        });
+    </script>
 </head>
 <body class="min-h-screen bg-gray-100 flex flex-col">
     <!-- Header -->
