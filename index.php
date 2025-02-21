@@ -153,7 +153,7 @@ include 'includes/header.php';
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Download Page</label>
                                     <div class="flex mt-1 rounded-md shadow-sm">
                                         <input type="text" 
-                                               value="<?php echo BASE_URL . '/download.php?id=' . $uploadResponse['data']['file_id']; ?>" 
+                                               value="<?php echo BASE_URL . '/download/' . $uploadResponse['data']['file_id']; ?>" 
                                                class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border border-gray-300 text-sm" 
                                                readonly 
                                                id="downloadLink">
@@ -165,7 +165,7 @@ include 'includes/header.php';
                                             </svg>
                                             Copy
                                         </button>
-                                        <a href="<?php echo BASE_URL . '/download.php?id=' . $uploadResponse['data']['file_id']; ?>" 
+                                        <a href="<?php echo BASE_URL . '/download/' . $uploadResponse['data']['file_id']; ?>" 
                                            target="_blank"
                                            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 text-sm font-medium text-gray-700 transition-colors">
                                             <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -518,7 +518,7 @@ uploadForm.onsubmit = function(e) {
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Download Page</label>
                                         <div class="flex mt-1 rounded-md shadow-sm">
                                             <input type="text" 
-                                                   value="${window.location.origin}/download.php?id=${response.data.file_id}" 
+                                                   value="${window.location.origin}/download/${response.data.file_id}" 
                                                    class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border border-gray-300 text-sm" 
                                                    readonly 
                                                    id="downloadLink">
@@ -530,7 +530,7 @@ uploadForm.onsubmit = function(e) {
                                                 </svg>
                                                 Copy
                                             </button>
-                                            <a href="${window.location.origin}/download.php?id=${response.data.file_id}" 
+                                            <a href="${window.location.origin}/download/${response.data.file_id}" 
                                                target="_blank"
                                                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-r-md bg-gray-50 hover:bg-gray-100 text-sm font-medium text-gray-700 transition-colors">
                                                 <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

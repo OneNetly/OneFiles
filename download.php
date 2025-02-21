@@ -55,7 +55,7 @@ $meta = [
         ? "Download {$fileName} securely from " . SITE_NAME . ". File size: {$fileSize}. Fast and reliable file sharing service."
         : 'Download your file securely from ' . SITE_NAME . '. Fast and reliable file sharing service.',
     'keywords' => 'download file, file sharing, secure download, ' . ($fileInfo ? strtolower(pathinfo($fileInfo['file_name'], PATHINFO_EXTENSION)) : '') . ' file',
-    'canonical' => BASE_URL . '/download.php?id=' . $fileId,
+    'canonical' => BASE_URL . '/download/' . $fileId,
     'type' => 'article',
     'modified_time' => $fileInfo ? date('c', strtotime($fileInfo['created_at'])) : date('c'),
     'robots' => $fileInfo ? 'index, follow' : 'noindex, follow',
@@ -166,7 +166,7 @@ include 'includes/header.php';
             <div class="border-t border-gray-200 pt-4 mb-6">
                 <h3 class="text-sm font-medium text-gray-700 mb-3">Share this file</h3>
                 <div class="grid grid-cols-2 gap-2">
-                    <a href="https://wa.me/?text=<?php echo urlencode($fileInfo['file_name'] . ' - ' . BASE_URL . '/download.php?id=' . $fileId); ?>" 
+                    <a href="https://wa.me/?text=<?php echo urlencode($fileInfo['file_name'] . ' - ' . BASE_URL . '/download/' . $fileId); ?>" 
                        target="_blank"
                        class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
                         <svg class="h-5 w-5 mr-1.5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
@@ -175,7 +175,7 @@ include 'includes/header.php';
                         WhatsApp
                     </a>
                     
-                    <a href="https://t.me/share/url?url=<?php echo urlencode(BASE_URL . '/download.php?id=' . $fileId); ?>&text=<?php echo urlencode($fileInfo['file_name']); ?>" 
+                    <a href="https://t.me/share/url?url=<?php echo urlencode(BASE_URL . '/download/' . $fileId); ?>&text=<?php echo urlencode($fileInfo['file_name']); ?>" 
                        target="_blank"
                        class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
                         <svg class="h-5 w-5 mr-1.5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
@@ -184,7 +184,7 @@ include 'includes/header.php';
                         Telegram
                     </a>
 
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(BASE_URL . '/download.php?id=' . $fileId); ?>" 
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(BASE_URL . '/download/' . $fileId); ?>" 
                        target="_blank"
                        class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
                         <svg class="h-5 w-5 mr-1.5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
@@ -193,7 +193,7 @@ include 'includes/header.php';
                         Facebook
                     </a>
 
-                    <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode($fileInfo['file_name']); ?>&url=<?php echo urlencode(BASE_URL . '/download.php?id=' . $fileId); ?>" 
+                    <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode($fileInfo['file_name']); ?>&url=<?php echo urlencode(BASE_URL . '/download/' . $fileId); ?>" 
                        target="_blank"
                        class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors">
                         <svg class="h-5 w-5 mr-1.5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">

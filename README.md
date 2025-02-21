@@ -10,7 +10,6 @@ FreeNetly is a modern, secure, and user-friendly file sharing platform built wit
 - 📱 Responsive design
 - 🚀 Fast download speeds
 - 🎨 Modern UI with Tailwind CSS
-- 🛡️ Built-in AdBlock detection
 - 📊 File preview support
 - 🌐 Social sharing options
 
@@ -41,18 +40,8 @@ cd FreeNetly
    - Follow the installation wizard
    - Enter your OneNetly API key and site settings
 
-4. Manual installation:
-   - Copy `config.example.php` to `config.php`
-   - Edit `config.php` with your settings:
-```php
-define('API_KEY', 'your-api-key-here');
-define('SITE_NAME', 'Your Site Name');
-define('SITE_EMAIL', 'your@email.com');
-define('DMCA_EMAIL', 'dmca@email.com');
-define('PRIVACY_EMAIL', 'privacy@email.com');
-```
 
-5. Set file permissions:
+4. Set file permissions:
 ```bash
 chmod 755 .
 chmod 644 *.php
