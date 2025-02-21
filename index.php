@@ -1,4 +1,10 @@
 <?php
+// Check if FreeNetly is installed
+if (!file_exists('config.php')) {
+    header('Location: install.php');
+    exit;
+}
+
 require_once 'config.php';
 
 // SEO Meta Data
