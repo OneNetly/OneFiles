@@ -13,9 +13,6 @@ define('MAX_FILE_SIZE', 100 * 1024 * 1024); // 100MB in bytes
 // Base URL (without trailing slash)
 define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST']);
 
-// Watermark Configuration
-define('FILE_WATERMARK', '[FreeNetly.COM]');
-
 // Image Configuration
 define('OG_IMAGE', BASE_URL . '/assets/images/og.png');
 define('TWITTER_IMAGE', BASE_URL . '/assets/images/og.png');

@@ -53,7 +53,7 @@ function proxyDownload($url) {
     $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
     $headers = substr($response, 0, $headerSize);
     
-    // Parse and modify filename
+    // Parse filename
     $fileName = '';
     if (preg_match('/Content-Disposition:.*filename=[\'"]*([^\"\']+)/i', $headers, $matches)) {
         $fileName = urldecode($matches[1]);
@@ -61,12 +61,7 @@ function proxyDownload($url) {
         $fileName = basename(parse_url(curl_getinfo($ch, CURLINFO_EFFECTIVE_URL), PHP_URL_PATH));
     }
     
-    // Replace old watermark and add new one if needed
-    $fileName = str_replace('[OneNetly.COM]', FILE_WATERMARK, $fileName);
-    if (!str_contains($fileName, FILE_WATERMARK)) {
-        $fileInfo = pathinfo($fileName);
-        $fileName = $fileInfo['filename'] . ' ' . FILE_WATERMARK . '.' . $fileInfo['extension'];
-    }
+    // Basic filename sanitization
     $fileName = preg_replace('/[^a-zA-Z0-9\-\.\_\(\)\[\] ]/', '', $fileName);
     
     // Get content type
