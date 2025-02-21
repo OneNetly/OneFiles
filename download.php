@@ -147,7 +147,7 @@ include 'includes/header.php';
             <div class="mb-6">
                 <div class="flex rounded-md shadow-sm">
                     <input type="text" 
-                           value="<?php echo BASE_URL . '/download.php?id=' . $fileId; ?>" 
+                           value="<?php echo BASE_URL . '/download/' . $fileId; ?>" 
                            class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border border-gray-300 text-sm" 
                            readonly 
                            id="shareLink">
