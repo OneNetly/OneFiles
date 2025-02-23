@@ -8,7 +8,7 @@
                     </div>
                     <div class="text-gray-400 text-xs">
                         Open source project - Fork on 
-                        <a href="https://github.com/TheAceMotiur/FreeNetly" 
+                        <a href="https://github.com/TheAceMotiur/OneFiles" 
                            target="_blank" 
                            rel="noopener noreferrer" 
                            class="text-primary hover:text-secondary transition-colors">

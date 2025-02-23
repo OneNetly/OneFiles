@@ -7,7 +7,7 @@ if (file_exists('config.php')) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>FreeNetly - Already Installed</title>
+        <title>OneFiles - Already Installed</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     </head>
@@ -17,8 +17,8 @@ if (file_exists('config.php')) {
                 <svg class="mx-auto h-12 w-12 text-blue-500 animate__animated animate__rubberBand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <h2 class="mt-4 text-xl font-semibold text-gray-900">FreeNetly is Ready!</h2>
-                <p class="mt-2 text-gray-600">Your FreeNetly installation is complete and running.</p>
+                <h2 class="mt-4 text-xl font-semibold text-gray-900">OneFiles is Ready!</h2>
+                <p class="mt-2 text-gray-600">Your OneFiles installation is complete and running.</p>
                 <a href="/" class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transform transition hover:scale-105">
                     Go to Homepage
                 </a>
@@ -144,7 +144,7 @@ PHP;
             </div>
         <?php else: ?>
             <div class="bg-white rounded-lg shadow-md p-8 animate__animated animate__fadeIn">
-                <h2 class="text-2xl font-bold text-center mb-6">Install FreeNetly</h2>
+                <h2 class="text-2xl font-bold text-center mb-6">Install OneFiles</h2>
                 
                 <?php if (!empty($errors)): ?>
                     <div class="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">

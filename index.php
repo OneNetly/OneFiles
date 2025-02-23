@@ -1,5 +1,5 @@
 <?php
-// Check if FreeNetly is installed
+// Check if OneFiles is installed
 if (!file_exists('config.php')) {
     header('Location: install.php');
     exit;

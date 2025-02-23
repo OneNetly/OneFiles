@@ -1,6 +1,6 @@
-# FreeNetly - Open Source File Sharing Platform
+# OneFiles - Open Source File Sharing Platform
 
-FreeNetly is a modern, secure, and user-friendly file sharing platform built with PHP. It allows users to upload and share files easily with support for files up to 100MB.
+OneFiles is a modern, secure, and user-friendly file sharing platform built with PHP. It allows users to upload and share files easily with support for files up to 100MB.
 
 ## 🌟 Features
 
@@ -27,8 +27,8 @@ FreeNetly is a modern, secure, and user-friendly file sharing platform built wit
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/TheAceMotiur/FreeNetly.git
-cd FreeNetly
+git clone https://github.com/OneNetly/OneFiles.git
+cd OneFiles
 ```
 
 2. Configure your web server:
@@ -101,7 +101,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🤝 Support
 
-For support, email support@freenetly.com or create an issue in the repository.
+For support, email support@onenetly.com or create an issue in the repository.
 
 ## 🙏 Acknowledgments
 
@@ -113,7 +113,7 @@ For support, email support@freenetly.com or create an issue in the repository.
 
 ### Reporting Security Issues
 
-If you discover a security vulnerability, please send an email to security@freenetly.com. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability, please send an email to security@onefiles.com. All security vulnerabilities will be promptly addressed.
 
 ## 📈 Future Plans
 
